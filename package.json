@@ -1,0 +1,27 @@
+{
+  "name": "hexagonal-example",
+  "version": "1.0.0",
+  "description": "hexagonal-example",
+  "main": "/dist/src/index.js",
+  "scripts": {
+    "start": "node",
+    "compile": "tsc",
+    "test": "jest --passWithNoTests --no-cache --runInBand --verbose --coverage"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": []
+  },
+  "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "cd": "^0.3.3",
+    "jest": "^27.5.1",
+    "ts-jest": "^27.1.3",
+    "tslint": "^6.1.3",
+    "typescript": "^4.6.2"
+  },
+  "dependencies": {
+    "uuidv4": "^6.2.12"
+  }
+}
