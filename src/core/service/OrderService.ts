@@ -20,19 +20,15 @@ export class OrderService {
 
   public async createOrder(order: Order): Promise<Order> {
 
-    for(const item of order.items){
-      const itemResult = await this.itemRepository.getById(item.id)
-      if(itemResult == undefined && itemResult == null){
+    const itemResult = await Promise.all(order.items.map(async (item) => {
+      return await this.itemRepository.getById(item.id)
+    }))
+
+    itemResult.forEach((item) => {
+      if(!item){
         throw new NotFoundError('Item not found in database')
       }
-    }
-
-    // order.items.forEach(async (item)  => {
-    //   const itemResult = await this.itemRepository.getById(item.id)
-    //   if(itemResult == undefined && itemResult == null){
-    //     throw new NotFoundError('Item not found in database')
-    //   }
-    // })
+    })
 
     const payment = await this.createPayment(order)
 
