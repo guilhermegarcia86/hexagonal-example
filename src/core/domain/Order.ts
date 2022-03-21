@@ -5,6 +5,6 @@ export interface Order {
   id: string
   amount: string
   items: Item[]
-  payment: Payment[]
-  created_at: Date
+  payments: Payment[]
+  createdAt: Date
 }

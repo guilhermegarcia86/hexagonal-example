@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { InMemoryPaymentClient } from "../../adapters/client/InMemoryPaymentClient"
-import { InMemoryItemRepository } from "../../adapters/repository/InMemoryItemRepository"
-import { InMemoryOrderRepository } from "../../adapters/repository/InMemoryOrderRepository"
+import { InMemoryItemRepository } from "../../adapters/repository/inMemory/InMemoryItemRepository"
+import { InMemoryOrderRepository } from "../../adapters/repository/inMemory/InMemoryOrderRepository"
 import { Item } from "../domain/Item"
 import { Order } from "../domain/Order"
 import { Payment } from "../domain/Payment"
@@ -41,7 +41,7 @@ describe('OrderService', () => {
       id: uuidv4(),
       amount: '100.0',
       items: [item],
-      created_at: new Date()
+      createdAt: new Date()
     } as Order
 
     const orderResult = await orderService.createOrder(order)
@@ -62,7 +62,7 @@ describe('OrderService', () => {
       id: uuidv4(),
       amount: '100.0',
       items: [item],
-      created_at: new Date()
+      createdAt: new Date()
     } as Order
 
     await expect(async () => {

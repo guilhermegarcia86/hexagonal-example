@@ -1,5 +1,5 @@
-import { Order } from "../../core/domain/Order";
-import { Repository } from "../../core/ports/repository/Repository";
+import { Order } from "../../../core/domain/Order";
+import { Repository } from "../../../core/ports/repository/Repository";
 
 export class InMemoryOrderRepository implements Repository<Order> {
 

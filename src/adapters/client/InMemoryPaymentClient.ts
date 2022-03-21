@@ -6,6 +6,7 @@ export class InMemoryPaymentClient implements Client<Payment> {
 
   send(payment: Payment): Promise<Payment> {
     payment.id = uuidv4()
+    payment.paidAt = new Date()
     return Promise.resolve(payment)
   }
 
