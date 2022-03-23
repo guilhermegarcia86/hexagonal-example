@@ -4,11 +4,11 @@ import { OrderEntity } from "./entity/OrderEntity";
 import { PaymentEntity } from "./entity/PaymentEntity";
 
 export const AppDataSource = new DataSource({
-  type: "postgres",
+  type: "mysql",
   host: "localhost",
-  port: 5432,
-  username: "myuser",
-  password: "myuser",
+  port: 3306,
+  username: "user",
+  password: "user",
   database: "order",
   synchronize: true,
   logging: true,

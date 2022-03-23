@@ -21,7 +21,7 @@ export class TypeOrmItemRepository implements Repository<Item>{
     return this.mapToItemModel(itemSaved)
   }
 
-  async getById(id: string): Promise<Item> {
+  async getById(id: number): Promise<Item> {
 
     const itemEntity = await this.entityManager.findOneBy({ id })
 

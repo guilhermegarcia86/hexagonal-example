@@ -5,6 +5,7 @@
   "main": "/dist/src/index.js",
   "scripts": {
     "start:express": "nodemon src/application/express/index.ts",
+    "start:fastify": "nodemon src/application/fastify/index.ts",
     "compile": "tsc",
     "test": "jest --passWithNoTests --no-cache --runInBand --verbose --coverage"
   },
@@ -27,9 +28,10 @@
   },
   "dependencies": {
     "express": "^4.17.3",
-    "pg": "^8.7.3",
+    "fastify": "^3.27.4",
+    "fastify-plugin": "^3.0.1",
+    "mysql2": "^2.3.3",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.3.1",
-    "uuidv4": "^6.2.12"
+    "typeorm": "^0.3.1"
   }
 }

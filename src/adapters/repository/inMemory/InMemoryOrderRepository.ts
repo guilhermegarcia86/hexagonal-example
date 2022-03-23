@@ -10,7 +10,7 @@ export class InMemoryOrderRepository implements Repository<Order> {
     return Promise.resolve(order)
   }
 
-  getById(id: string): Promise<Order>  {
+  getById(id: number): Promise<Order>  {
     const order = this.orderList.find((order) => order.id === id)
     return Promise.resolve(order)
   }

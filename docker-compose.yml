@@ -1,11 +1,14 @@
 version: '3'
 services: 
 
-  postgres:
-    image: postgres
+  mysql:
+    image: mysql
+    cap_add: 
+      - SYS_NICE
     environment: 
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: myuser
-      POSTGRES_DB: order
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+      MYSQL_DATABASE: order
     ports: 
-      - "5432:5432"
+      - "3306:3306"

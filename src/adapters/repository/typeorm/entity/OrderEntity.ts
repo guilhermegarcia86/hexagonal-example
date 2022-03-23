@@ -1,17 +1,18 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm"
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm"
 import { ItemEntity } from "./ItemEntity"
 import { PaymentEntity } from "./PaymentEntity"
 
 @Entity()
 export class OrderEntity {
 
-  @PrimaryColumn({type: 'uuid'})
-  id: string
+  @PrimaryGeneratedColumn()
+  id: number
 
   @Column({type: 'text'})
   amount: string
 
-  @OneToMany(type => ItemEntity, item => item.order, { cascade: ['insert'] })
+  @ManyToMany(() => ItemEntity)
+  @JoinTable()
   items?: ItemEntity[]
 
   @OneToMany(type => PaymentEntity, payment => payment.order, { cascade: ['insert'] })

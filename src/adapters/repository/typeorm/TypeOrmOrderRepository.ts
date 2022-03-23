@@ -12,7 +12,7 @@ export class TypeOrmOrderRepository implements Repository<Order>{
 
   private readonly entityManager: RepositoryEntity<OrderEntity>
 
-  constructor(){
+  constructor() {
     this.entityManager = AppDataSource.getRepository(OrderEntity)
   }
 
@@ -25,16 +25,23 @@ export class TypeOrmOrderRepository implements Repository<Order>{
     return this.mapToOrderModel(orderSaved)
   }
 
-  async getById(id: string): Promise<Order> {
+  async getById(id: number): Promise<Order> {
 
-    const orderEntity = await this.entityManager.findOneBy({id})
+    const orderEntity = await this.entityManager.createQueryBuilder("order")
+                                                .where("order.id = :id", { id })
+                                                .leftJoinAndSelect("order.items", "item")
+                                                .leftJoinAndSelect("order.payments", "payment")
+                                                .getOne()
 
     return this.mapToOrderModel(orderEntity)
   }
 
   async getAll(): Promise<Order[]> {
 
-    const allOrders = await this.entityManager.find()
+    const allOrders = await this.entityManager.createQueryBuilder("order")
+                                                .leftJoinAndSelect("order.items", "item")
+                                                .leftJoinAndSelect("order.payments", "payment")
+                                                .getMany()
 
     return allOrders.map((order) => this.mapToOrderModel(order))
   }
@@ -71,7 +78,7 @@ export class TypeOrmOrderRepository implements Repository<Order>{
   }
 
   private mapToOrderEntity(order: Order): OrderEntity {
-    
+
     const itemList = order.items.map((item) => {
       const itemEntity: ItemEntity = new ItemEntity()
       itemEntity.id = item.id

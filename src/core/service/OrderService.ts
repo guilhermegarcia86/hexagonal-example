@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import { Item } from "../domain/Item";
 import { Order } from "../domain/Order";
 import { Payment } from "../domain/Payment";
@@ -22,7 +20,6 @@ export class OrderService {
 
   public async createOrder(order: Order): Promise<Order> {
 
-    order.id = uuidv4()
     order.createdAt = new Date()
 
     const itemResult = await Promise.all(order.items.map(async (item) => {
@@ -49,7 +46,7 @@ export class OrderService {
 
   }
 
-  public async findById(id: string): Promise<Order> {
+  public async findById(id: number): Promise<Order> {
     return await this.orderRepository.getById(id)
   }
 

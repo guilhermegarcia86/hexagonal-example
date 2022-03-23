@@ -1,13 +1,13 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm"
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 import { OrderEntity } from "./OrderEntity"
 
 @Entity()
 export class PaymentEntity {
 
-  @PrimaryColumn({type: 'uuid'})
-  id: string
+  @PrimaryGeneratedColumn()
+  id: number
 
-  @ManyToOne(type => OrderEntity, order => order.payments, { cascade: ['insert'], eager: true})
+  @ManyToOne(type => OrderEntity, order => order.payments, { cascade: ['insert']})
   order?: OrderEntity
   
   @Column({type: 'timestamp'})

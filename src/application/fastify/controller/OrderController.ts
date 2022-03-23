@@ -1,5 +1,10 @@
-import express from 'express';
-import { Response, Request } from 'express';
+import {
+  FastifyInstance,
+  FastifyPluginOptions,
+  FastifyPluginAsync
+} from 'fastify';
+import fp from 'fastify-plugin';
+
 import { OrderService } from '../../../core/service/OrderService';
 import { InMemoryItemRepository } from '../../../adapters/repository/inMemory/InMemoryItemRepository';
 import { InMemoryPaymentClient } from '../../../adapters/client/InMemoryPaymentClient';
@@ -12,8 +17,6 @@ import { InMemoryOrderRepository } from '../../../adapters/repository/inMemory/I
 import { TypeOrmOrderRepository } from '../../../adapters/repository/typeorm/TypeOrmOrderRepository';
 import { TypeOrmItemRepository } from '../../../adapters/repository/typeorm/TypeOrmItemRepository';
 
-const router = express.Router()
-
 const orderInMemoryRepository: Repository<Order> = new InMemoryOrderRepository()
 const itemInMemoryRepository: Repository<Item> = new InMemoryItemRepository()
 const paymentInMemoryClient: Client<Payment> = new InMemoryPaymentClient()
@@ -23,25 +26,41 @@ const itemTypeOrmRepository: Repository<Item> = new TypeOrmItemRepository()
 
 const orderService: OrderService = new OrderService(orderTypeOrmRepository, itemTypeOrmRepository, paymentInMemoryClient)
 
-router.post('/', async (req: Request<{}, {}, Order>, res: Response<Order>) => {
-  const order = await orderService.createOrder(req.body)
-  res.json(order)
-})
+interface idParams {
+  id: number
+}
 
-router.get('/:id', async (req: Request, res: Response<Order>) => {
-  const id = req.params.id;
+const OrderController: FastifyPluginAsync = async (server: FastifyInstance, options: FastifyPluginOptions) => {
 
-  const order = await orderService.findById(parseInt(id))
-  res.json(order);
+  server.post<{ Body: Order }>('/', {}, async (request, reply) => {
+    try {
+      const order = await orderService.createOrder(request.body)
+      return reply.code(201).send(order)
+    } catch (error) {
+      request.log.error(error)
+      return reply.send(500)
+    }
+  })
 
-});
+  server.get<{ Params: idParams }>("/:id", {}, async (request, reply) => {
 
-router.get('/', async (req: Request<{}>, res: Response<Order[]>) => {
+    const id = request.params.id
+    const order = await orderService.findById(id)
+    return reply.code(200).send(order)
 
-  const orders = await orderService.findAllOrders()
-  res.json(orders);
+  })
 
-});
+  server.get("/", {}, async (_, reply) => {
+
+    const orders = await orderService.findAllOrders()
+    return reply.code(200).send(orders)
+
+  })
 
 
-export default router
+  server.get("/ping", {}, async (request, reply) => {
+    return reply.code(200).send({ msg: "pong" })
+  })
+}
+
+export default fp(OrderController)

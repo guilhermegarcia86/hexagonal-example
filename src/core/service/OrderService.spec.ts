@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import { InMemoryPaymentClient } from "../../adapters/client/InMemoryPaymentClient"
 import { InMemoryItemRepository } from "../../adapters/repository/inMemory/InMemoryItemRepository"
 import { InMemoryOrderRepository } from "../../adapters/repository/inMemory/InMemoryOrderRepository"
@@ -19,7 +17,7 @@ describe('OrderService', () => {
 
   let orderService: OrderService
 
-  beforeAll(() => {
+  beforeEach(() => {
     orderRepository = new InMemoryOrderRepository()
     itemRepository = new InMemoryItemRepository()
     paymentClient = new InMemoryPaymentClient()
@@ -30,15 +28,15 @@ describe('OrderService', () => {
   it('Should create a Order', async () => {
 
     const item: Item = {
-      id: '1',
-      name: 'Assistencia',
+      id: 1,
+      name: 'Produto 1',
       price: '20.0'
     }
 
     await itemRepository.save(item)
 
     const order = {
-      id: uuidv4(),
+      id: 1,
       amount: '100.0',
       items: [item],
       createdAt: new Date()
@@ -53,13 +51,13 @@ describe('OrderService', () => {
   it('Should validate a Order', async () => {
 
     const item: Item = {
-      id: '2',
-      name: 'Assistencia',
+      id: 2,
+      name: 'Produto 2',
       price: '20.0'
     }
 
     const order = {
-      id: uuidv4(),
+      id: 2,
       amount: '100.0',
       items: [item],
       createdAt: new Date()
@@ -69,5 +67,56 @@ describe('OrderService', () => {
       await orderService.createOrder(order)
     }).rejects.toThrow(NotFoundError)
 
+  })
+
+  it('Should find all the orders', async () => {
+
+    const item: Item = {
+      id: 1,
+      name: 'Assistencia',
+      price: '20.0'
+    }
+
+    await itemRepository.save(item)
+
+    const order = {
+      id: 2,
+      amount: '100.0',
+      items: [item],
+      createdAt: new Date()
+    } as Order
+
+    await orderService.createOrder(order)
+
+    const orders = await orderService.findAllOrders()
+
+    expect(orders.length).toEqual(1)
+    expect(orders).toEqual(expect.arrayContaining([expect.objectContaining({id: 2})]))
+
+
+  })
+
+  it('Should find the order by id', async () => {
+
+    const item: Item = {
+      id: 1,
+      name: 'Assistencia',
+      price: '20.0'
+    }
+
+    await itemRepository.save(item)
+
+    const order = {
+      id: 2,
+      amount: '100.0',
+      items: [item],
+      createdAt: new Date()
+    } as Order
+
+    await orderService.createOrder(order)
+
+    const orderResult = await orderService.findById(2)
+
+    expect(orderResult.id).toEqual(order.id)
   })
 })
