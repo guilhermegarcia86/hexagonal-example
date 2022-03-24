@@ -16,6 +16,11 @@ Before all if you have **Docker** and **Docker-Compose** you may run:
 docker-compose up -d
 ```
 
+Install all dependencies
+```bash
+npm i
+```
+
 To run using Express
 ```bash
 npm run start:express
