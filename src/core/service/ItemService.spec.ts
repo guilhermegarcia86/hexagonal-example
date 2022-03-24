@@ -9,7 +9,7 @@ describe('OrderService', () => {
 
   let itemService: ItemService
 
-  beforeAll(() => {
+  beforeEach(() => {
     itemRepository = new InMemoryItemRepository()
   
     itemService = new ItemService(itemRepository)
@@ -25,6 +25,22 @@ describe('OrderService', () => {
     const itemSaved = await itemService.createItem(item)
 
     expect(itemSaved.id).toEqual(1)
+
+  })
+
+  it('Should find all Items', async () => {
+
+    const item = {
+      name: 'Assistencia',
+      price: '20.0'
+    } as Item
+
+    await itemService.createItem(item)
+
+    const items = await itemRepository.getAll()
+
+    expect(items.length).toEqual(1)
+    expect(items).toEqual(expect.arrayContaining([expect.objectContaining({id: 1})]))
 
   })
 })
